@@ -75,11 +75,11 @@ class M5StackTab5<PixelFormat: Pixel> {
             throw IDF.Error(ESP_ERR_NOT_FOUND)
         }
 
-        // let audio = try Audio(
-        //     num: 1,
-        //     mclk: .gpio30, bclk: .gpio27, ws: .gpio29, dout: .gpio26, din: .gpio28,
-        //     i2c: i2c
-        // )
+        let audio = try ES8388(
+            num: 1,
+            mclk: .gpio30, bclk: .gpio27, ws: .gpio29, dout: .gpio26, din: .gpio28,
+            i2c: i2c0
+        )
         let sdcard = try SDCard(
             ldo: (channel: 4, voltageMv: 3300),
             slot: .default(
@@ -94,7 +94,7 @@ class M5StackTab5<PixelFormat: Pixel> {
             pi4ioe2: pi4ioe2,
             display: display,
             touch: touch,
-            // audio: audio,
+            audio: audio,
             sdcard: sdcard
         )
     }
@@ -104,7 +104,7 @@ class M5StackTab5<PixelFormat: Pixel> {
     let pi4ioe2: PI4IO
     var display: Display
     let touch: Touch
-    // let audio: Audio
+    let audio: ES8388
     let sdcard: SDCard
     private init(
         i2c0: IDF.I2C,
@@ -112,7 +112,7 @@ class M5StackTab5<PixelFormat: Pixel> {
         pi4ioe2: PI4IO,
         display: Display,
         touch: Touch,
-        // audio: Audio,
+        audio: ES8388,
         sdcard: SDCard
     ) {
         self.i2c0 = i2c0
@@ -120,7 +120,7 @@ class M5StackTab5<PixelFormat: Pixel> {
         self.pi4ioe2 = pi4ioe2
         self.display = display
         self.touch = touch
-        // self.audio = audio
+        self.audio = audio
         self.sdcard = sdcard
     }
 
@@ -190,15 +190,7 @@ class M5StackTab5<PixelFormat: Pixel> {
         }
     }
 
-
-    /*
-     * MARK: Audio (ES8388)
-     */
-
-
-    /*
-     * MARK: SDCard
-     */
+    // MARK: SDCard
     class SDCard {
         let powerControl: sd_pwr_ctrl_handle_t
         var sdmmc: IDF.SDMMC? = nil
