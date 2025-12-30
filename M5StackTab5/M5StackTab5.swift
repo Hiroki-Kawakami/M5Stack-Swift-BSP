@@ -5,7 +5,8 @@ class M5StackTab5<PixelFormat: Pixel> {
         pixelFormat: PixelFormat.Type = RGB565.self,
         frameBufferNum: Int = 1,
         onRefreshDone: (() -> Void)? = nil,
-        touchInterrupt: Bool = true
+        touchInterrupt: Bool = true,
+        usbHost: Bool = false,
     ) throws(IDF.Error) -> M5StackTab5 {
         let i2c0 = try IDF.I2C(num: 0, scl: .gpio32, sda: .gpio31)
         let pi4ioe1 = try PI4IO(i2c: i2c0, address: 0x43, pins: (
@@ -22,7 +23,7 @@ class M5StackTab5<PixelFormat: Pixel> {
             .output(defaultState: true),  // WLAN_PWR_EN
             .none,
             .none,
-            .output(defaultState: false), // USB5V_EN
+            .output(defaultState: usbHost), // USB5V_EN
             .output(defaultState: false), // PWROFF_PLUSE
             .output(defaultState: false), // nCHG_QC_EN
             .input(pull: .none),          // CHG_STAT
