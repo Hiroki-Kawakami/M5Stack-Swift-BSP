@@ -80,14 +80,14 @@ class M5StackTab5<PixelFormat: Pixel> {
         //     mclk: .gpio30, bclk: .gpio27, ws: .gpio29, dout: .gpio26, din: .gpio28,
         //     i2c: i2c
         // )
-        // let sdcard = try SDCard(
-        //     ldo: (channel: 4, voltageMv: 3300),
-        //     slot: .default(
-        //         busWidth: 4,
-        //         clk: .gpio43, cmd: .gpio44,
-        //         data0: .gpio39, data1: .gpio40, data2: .gpio41, data3: .gpio42,
-        //     )
-        // )
+        let sdcard = try SDCard(
+            ldo: (channel: 4, voltageMv: 3300),
+            slot: .default(
+                busWidth: 4,
+                clk: .gpio43, cmd: .gpio44,
+                data0: .gpio39, data1: .gpio40, data2: .gpio41, data3: .gpio42,
+            )
+        )
         return M5StackTab5(
             i2c0: i2c0,
             pi4ioe1: pi4ioe1,
@@ -95,7 +95,7 @@ class M5StackTab5<PixelFormat: Pixel> {
             display: display,
             touch: touch,
             // audio: audio,
-            // sdcard: sdcard
+            sdcard: sdcard
         )
     }
 
@@ -105,15 +105,15 @@ class M5StackTab5<PixelFormat: Pixel> {
     var display: Display
     let touch: Touch
     // let audio: Audio
-    // let sdcard: SDCard
+    let sdcard: SDCard
     private init(
         i2c0: IDF.I2C,
         pi4ioe1: PI4IO,
         pi4ioe2: PI4IO,
         display: Display,
-        touch: Touch
+        touch: Touch,
         // audio: Audio,
-        // sdcard: SDCard
+        sdcard: SDCard
     ) {
         self.i2c0 = i2c0
         self.pi4ioe1 = pi4ioe1
@@ -121,7 +121,7 @@ class M5StackTab5<PixelFormat: Pixel> {
         self.display = display
         self.touch = touch
         // self.audio = audio
-        // self.sdcard = sdcard
+        self.sdcard = sdcard
     }
 
     // MARK: Display
@@ -199,38 +199,38 @@ class M5StackTab5<PixelFormat: Pixel> {
     /*
      * MARK: SDCard
      */
-    // class SDCard {
-    //     let powerControl: sd_pwr_ctrl_handle_t
-    //     var sdmmc: IDF.SDMMC? = nil
-    //     let slotConfig: IDF.SDMMC.SlotConfig
+    class SDCard {
+        let powerControl: sd_pwr_ctrl_handle_t
+        var sdmmc: IDF.SDMMC? = nil
+        let slotConfig: IDF.SDMMC.SlotConfig
 
-    //     init(
-    //         ldo: (channel: Int32, voltageMv: Int32),
-    //         slot: IDF.SDMMC.SlotConfig
-    //     ) throws(IDF.Error) {
-    //         // Setup SDCard Power (LDO)
-    //         var ldoConfig = sd_pwr_ctrl_ldo_config_t(ldo_chan_id: ldo.channel)
-    //         var powerControl: sd_pwr_ctrl_handle_t?
-    //         try IDF.Error.check(sd_pwr_ctrl_new_on_chip_ldo(&ldoConfig, &powerControl))
-    //         self.powerControl = powerControl!
-    //         self.slotConfig = slot
-    //     }
+        init(
+            ldo: (channel: Int32, voltageMv: Int32),
+            slot: IDF.SDMMC.SlotConfig
+        ) throws(IDF.Error) {
+            // Setup SDCard Power (LDO)
+            var ldoConfig = sd_pwr_ctrl_ldo_config_t(ldo_chan_id: ldo.channel)
+            var powerControl: sd_pwr_ctrl_handle_t?
+            try IDF.Error.check(sd_pwr_ctrl_new_on_chip_ldo(&ldoConfig, &powerControl))
+            self.powerControl = powerControl!
+            self.slotConfig = slot
+        }
 
-    //     var isMounted: Bool {
-    //         return sdmmc != nil
-    //     }
+        var isMounted: Bool {
+            return sdmmc != nil
+        }
 
-    //     func mount(path: String, maxFiles: Int32) throws(IDF.Error) {
-    //         var host = IDF.SDMMC.HostConfig.default
-    //         host.slot = SDMMC_HOST_SLOT_0
-    //         host.max_freq_khz = SDMMC_FREQ_HIGHSPEED
-    //         sdmmc = try IDF.SDMMC.mount(
-    //             path: path,
-    //             host: host,
-    //             slot: slotConfig,
-    //             maxFiles: maxFiles
-    //         )
-    //         sdmmc!.printInfo()
-    //     }
-    // }
+        func mount(path: String, maxFiles: Int32) throws(IDF.Error) {
+            var host = IDF.SDMMC.HostConfig.default
+            host.slot = SDMMC_HOST_SLOT_0
+            host.max_freq_khz = SDMMC_FREQ_HIGHSPEED
+            sdmmc = try IDF.SDMMC.mount(
+                path: path,
+                host: host,
+                slot: slotConfig,
+                maxFiles: maxFiles
+            )
+            sdmmc!.printInfo()
+        }
+    }
 }
