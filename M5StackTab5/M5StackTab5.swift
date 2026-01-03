@@ -221,7 +221,8 @@ class M5StackTab5<PixelFormat: Pixel> {
                 path: path,
                 host: host,
                 slot: slotConfig,
-                maxFiles: maxFiles
+                maxFiles: maxFiles,
+                allocationUnitSize: 64 * 1024
             )
             sdmmc!.printInfo()
         }
