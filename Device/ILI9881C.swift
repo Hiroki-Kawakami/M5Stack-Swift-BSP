@@ -34,7 +34,7 @@ class ILI9881C<PixelFormat: Pixel> {
         var busConfig = esp_lcd_dsi_bus_config_t(
             bus_id: 0,
             num_data_lanes: 2,
-            phy_clk_src: MIPI_DSI_PHY_PLLREF_CLK_SRC_PLL_F20M,
+            phy_clk_src: MIPI_DSI_PHY_CLK_SRC_DEFAULT,
             lane_bit_rate_mbps: rgb888 ? 870 : 800,
         )
         var mipiDsiBus: esp_lcd_dsi_bus_handle_t?

@@ -37,8 +37,8 @@ enum ST7123 {
             var busConfig = esp_lcd_dsi_bus_config_t(
                 bus_id: 0,
                 num_data_lanes: 2,
-                phy_clk_src: MIPI_DSI_PHY_PLLREF_CLK_SRC_PLL_F20M,
-                lane_bit_rate_mbps: 965,
+                phy_clk_src: MIPI_DSI_PHY_CLK_SRC_DEFAULT,
+                lane_bit_rate_mbps: 870,
             )
             var mipiDsiBus: esp_lcd_dsi_bus_handle_t?
             try IDF.Error.check(esp_lcd_new_dsi_bus(&busConfig, &mipiDsiBus))
@@ -54,7 +54,7 @@ enum ST7123 {
             var dpiConfig = esp_lcd_dpi_panel_config_t(
                 virtual_channel: 0,
                 dpi_clk_src: MIPI_DSI_DPI_CLK_SRC_DEFAULT,
-                dpi_clock_freq_mhz: 70,
+                dpi_clock_freq_mhz: 75,
                 pixel_format: rgb888 ? LCD_COLOR_PIXEL_FORMAT_RGB888 : LCD_COLOR_PIXEL_FORMAT_RGB565,
                 in_color_format: lcd_color_format_t(0),
                 out_color_format: lcd_color_format_t(0),
@@ -62,8 +62,8 @@ enum ST7123 {
                 video_timing: esp_lcd_video_timing_t(
                     h_size: UInt32(size.width),
                     v_size: UInt32(size.height),
-                    hsync_pulse_width: 2,
-                    hsync_back_porch: 40,
+                    hsync_pulse_width: 40,
+                    hsync_back_porch: 140,
                     hsync_front_porch: 40,
                     vsync_pulse_width: 2,
                     vsync_back_porch: 8,
