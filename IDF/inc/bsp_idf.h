@@ -24,6 +24,7 @@
 #include "esp_vfs_fat.h"
 #include "esp_timer.h"
 #include "sdmmc_cmd.h"
+#include "nvs_flash.h"
 
 void esp_log_write_str(esp_log_level_t level, const char *tag, const char *str) {
     esp_log_write(level, tag, "%s", str);
