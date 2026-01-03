@@ -41,4 +41,8 @@ class Memory {
         }
         return UnsafeMutableRawBufferPointer(start: pointer, count: size)
     }
+
+    static func free<T>(_ ptr: UnsafeMutableBufferPointer<T>) {
+        heap_caps_free(ptr.baseAddress)
+    }
 }
