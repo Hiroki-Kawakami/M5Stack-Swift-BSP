@@ -87,6 +87,16 @@ class ES8388 {
             .unwrap(errMsg: { "Failed to create Speaker codec device" })
     }
 
+    func open(rate: UInt32, bps: UInt8, ch: UInt8) throws(IDF.Error) {
+        var info = esp_codec_dev_sample_info_t()
+        info.sample_rate = rate
+        info.channel = ch
+        info.bits_per_sample = bps
+        try IDF.Error.check(esp_codec_dev_open(outputDevice, &info))
+    }
+    func close() throws(IDF.Error) {
+        try IDF.Error.check(esp_codec_dev_close(outputDevice))
+    }
     func reconfigOutput(rate: UInt32, bps: UInt8, ch: UInt8) throws(IDF.Error) {
         var fs = esp_codec_dev_sample_info_t()
         fs.sample_rate = rate
