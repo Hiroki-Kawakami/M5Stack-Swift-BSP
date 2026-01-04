@@ -13,7 +13,12 @@ class Task {
 
     let proc: (Task) -> Void
     var handle: TaskHandle_t? = nil
-    private(set) var shouldStop: Bool = false
+
+    private static func taskEntry(param: UnsafeMutableRawPointer?) {
+        let task = Unmanaged<Task>.fromOpaque(param!).takeRetainedValue()
+        task.proc(task)
+        task.handle = nil
+    }
 
     @discardableResult
     init(name: UnsafePointer<CChar>, stackDepth: UInt32 = 4096, priority: UInt32, xCoreID: BaseType_t = 0, proc: @escaping (Task) -> Void) {
@@ -21,9 +26,7 @@ class Task {
 
         let res = xTaskCreatePinnedToCore(
             { (pvParameters: UnsafeMutableRawPointer?) in
-                let task = Unmanaged<Task>.fromOpaque(pvParameters!).takeRetainedValue()
-                task.proc(task)
-                task.handle = nil
+                Task.taskEntry(param: pvParameters)
                 vTaskDelete(nil)
             },
             name,
@@ -36,9 +39,5 @@ class Task {
         if res != pdPASS {
             fatalError("Failed to create task: \(res)")
         }
-    }
-
-    func stop() {
-        shouldStop = true
     }
 }
