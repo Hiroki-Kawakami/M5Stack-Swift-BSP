@@ -78,7 +78,7 @@ extension IDF {
                 )
             }
 
-            func decode(inputBuffer: UnsafeRawBufferPointer, outputBuffer: UnsafeMutableRawBufferPointer) throws(IDF.Error) -> UInt32 {
+            @discardableResult func decode(inputBuffer: UnsafeRawBufferPointer, outputBuffer: UnsafeMutableRawBufferPointer) throws(IDF.Error) -> UInt32 {
                 var decodeSize: UInt32 = 0
                 try IDF.Error.check(
                     jpeg_decoder_process(
