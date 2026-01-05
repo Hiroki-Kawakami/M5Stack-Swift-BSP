@@ -32,7 +32,11 @@ extension LVGL {
 
     struct Screen: ObjectProtocol {
         let obj: OpaquePointer
-
+        init(obj: OpaquePointer? = nil) { self.obj = obj ?? lv_obj_create(nil) }
         static var active: Screen { Screen(obj: lv_screen_active()) }
     }
+}
+
+extension LVGL.Screen {
+    func load() { lv_screen_load(obj) }
 }

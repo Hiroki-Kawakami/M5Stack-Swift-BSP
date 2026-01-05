@@ -51,7 +51,7 @@ extension LVGL.Indev {
     func setReadCallback(_ callback: @escaping lv_indev_read_cb_t) { lv_indev_set_read_cb(indev, callback) }
     func setUserData(_ userData: UnsafeMutableRawPointer?) { lv_indev_set_user_data(indev, userData) }
     func setDriverData(_ driverData: UnsafeMutableRawPointer?) { lv_indev_set_driver_data(indev, driverData) }
-    func setDisplay(_ display: OpaquePointer) { lv_indev_set_display(indev, display) }
+    func setDisplay(_ display: LVGL.Display) { lv_indev_set_display(indev, display.disp) }
     func setLongPressTime(_ time: UInt16) { lv_indev_set_long_press_time(indev, time) }
     func setLongPressRepeatTime(_ time: UInt16) { lv_indev_set_long_press_repeat_time(indev, time) }
     func setScrollLimit(_ limit: UInt8) { lv_indev_set_scroll_limit(indev, limit) }

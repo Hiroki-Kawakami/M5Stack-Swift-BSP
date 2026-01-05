@@ -24,4 +24,6 @@ extension LVGL {
         static let outRightMid = Align(rawValue: LV_ALIGN_OUT_RIGHT_MID.rawValue)
         static let outRightBottom = Align(rawValue: LV_ALIGN_OUT_RIGHT_BOTTOM.rawValue)
     }
+
+    static func percent(_ x: Int32) -> Int32 { lv_pct(x) }
 }
