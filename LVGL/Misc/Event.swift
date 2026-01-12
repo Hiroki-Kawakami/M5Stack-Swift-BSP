@@ -104,3 +104,12 @@ extension lv_event_code_t {
     static let preprocess = LV_EVENT_PREPROCESS
     static let markedDeleting = LV_EVENT_MARKED_DELETING
 }
+
+extension LVGL.ObjectProtocol {
+    func addEventCallback(filter: lv_event_code_t, callback: FFI.Wrapper<() -> ()>) {
+        addEventCb({
+            let event = LVGL.Event(e: $0!)
+            FFI.Wrapper<() -> ()>.unretained(event.getUserData())()
+        }, filter: filter, userData: callback.passUnretained())
+    }
+}
