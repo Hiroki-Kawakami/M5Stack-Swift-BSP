@@ -189,8 +189,20 @@ extension LVGL {
         static let const = StyleProp(rawValue: LV_STYLE_PROP_CONST.rawValue)
     }
 
-    struct Style {
-        let obj: UnsafeMutablePointer<lv_style_t>
+    protocol StyleProtocol {
+        var style: UnsafeMutablePointer<lv_style_t> { get }
+    }
+    class Style: StyleProtocol {
+        var value: lv_style_t
+        var style: UnsafeMutablePointer<lv_style_t> { withUnsafeMutablePointer(to: &value) { $0 } }
+        init(objectInit: ((Style) -> ())? = nil) {
+            value = lv_style_t()
+            lv_style_init(style)
+            objectInit?(self)
+        }
+    }
+    struct StyleReference: StyleProtocol {
+        let style: UnsafeMutablePointer<lv_style_t>
     }
 
     typealias StyleValue = lv_style_value_t
@@ -198,14 +210,14 @@ extension LVGL {
 }
 
 extension LVGL.ObjectProtocol {
-    func addStyle(_ style: LVGL.Style, selector: LVGL.StyleSelector) { lv_obj_add_style(obj, style.obj, selector.rawValue) }
-    func replaceStyle(old: LVGL.Style, new: LVGL.Style, selector: LVGL.StyleSelector) { lv_obj_replace_style(obj, old.obj, new.obj, selector.rawValue) }
-    func removeStyle(_ style: LVGL.Style, selector: LVGL.StyleSelector) { lv_obj_remove_style(obj, style.obj, selector.rawValue) }
+    func addStyle<S: LVGL.StyleProtocol>(_ style: S, selector: LVGL.StyleSelector) { lv_obj_add_style(obj, style.style, selector.rawValue) }
+    func replaceStyle<S1: LVGL.StyleProtocol, S2: LVGL.StyleProtocol>(old: S1, new: S2, selector: LVGL.StyleSelector) { lv_obj_replace_style(obj, old.style, new.style, selector.rawValue) }
+    func removeStyle<S: LVGL.StyleProtocol>(_ style: S, selector: LVGL.StyleSelector) { lv_obj_remove_style(obj, style.style, selector.rawValue) }
     func removeStyleAll() { lv_obj_remove_style_all(obj) }
-    static func reportStyleChange(_ style: LVGL.Style) { lv_obj_report_style_change(style.obj) }
+    static func reportStyleChange(_ style: LVGL.Style) { lv_obj_report_style_change(style.style) }
     func refreshStyle(part: LVGL.Part, prop: LVGL.StyleProp) { lv_obj_refresh_style(obj, lv_part_t(part.rawValue), lv_style_prop_t(prop.rawValue)) }
-    func styleSetDisabled(_ style: LVGL.Style, selector: LVGL.StyleSelector, disabled: Bool) { lv_obj_style_set_disabled(obj, style.obj, selector.rawValue, disabled) }
-    func styleGetDisabled(_ style: LVGL.Style, selector: LVGL.StyleSelector) -> Bool { lv_obj_style_get_disabled(obj, style.obj, selector.rawValue) }
+    func styleSetDisabled<S: LVGL.StyleProtocol>(_ style: S, selector: LVGL.StyleSelector, disabled: Bool) { lv_obj_style_set_disabled(obj, style.style, selector.rawValue, disabled) }
+    func styleGetDisabled<S: LVGL.StyleProtocol>(_ style: S, selector: LVGL.StyleSelector) -> Bool { lv_obj_style_get_disabled(obj, style.style, selector.rawValue) }
     static func enableStyleRefresh(en: Bool) { lv_obj_enable_style_refresh(en) }
     func getStyleProp(part: LVGL.Part, prop: LVGL.StyleProp) -> LVGL.StyleValue { lv_obj_get_style_prop(obj, lv_part_t(part.rawValue), lv_style_prop_t(prop.rawValue)) }
     func hasStyleProp(selector: LVGL.StyleSelector, prop: LVGL.StyleProp) -> Bool { lv_obj_has_style_prop(obj, selector.rawValue, lv_style_prop_t(prop.rawValue)) }
