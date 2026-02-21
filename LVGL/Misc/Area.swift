@@ -26,4 +26,5 @@ extension LVGL {
     }
 
     static func percent(_ x: Int32) -> Int32 { lv_pct(x) }
+    static var sizeContent: Int32 { lv_size_content() }
 }

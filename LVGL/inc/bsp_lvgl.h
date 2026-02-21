@@ -191,3 +191,6 @@ static lv_obj_class_type_t lv_obj_class_get_type(const lv_obj_class_t *ptr) {
 #endif
     return LV_OBJ_CLASS_TYPE_UNKNOWN;
 }
+
+// MARK: size content
+static int32_t lv_size_content() { return LV_SIZE_CONTENT; }
