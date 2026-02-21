@@ -5,7 +5,10 @@ extension LVGL {
         typealias State = lv_imagebutton_state_t
 
         init(obj: OpaquePointer) { self.obj = obj }
-        init<T: ObjectProtocol>(parent: T?) { self.obj = lv_imagebutton_create(parent?.obj) }
+        @discardableResult init<T: ObjectProtocol>(parent: T?, objectInit: ((ImageButton) -> ())? = nil) {
+            self.obj = lv_imagebutton_create(parent?.obj)
+            objectInit?(self)
+        }
 
         func setSrc(state: State, srcLeft: UnsafeRawPointer, srcMid: UnsafeRawPointer, srcRight: UnsafeRawPointer) { lv_imagebutton_set_src(obj, state, srcLeft, srcMid, srcRight) }
         func setState(_ state: State) { lv_imagebutton_set_state(obj, state) }

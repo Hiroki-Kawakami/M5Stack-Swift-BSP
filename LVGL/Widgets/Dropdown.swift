@@ -3,7 +3,10 @@ extension LVGL {
         let obj: OpaquePointer
 
         init(obj: OpaquePointer) { self.obj = obj }
-        init<T: ObjectProtocol>(parent: T?) { self.obj = lv_dropdown_create(parent?.obj) }
+        @discardableResult init<T: ObjectProtocol>(parent: T?, objectInit: ((Dropdown) -> ())? = nil) {
+            self.obj = lv_dropdown_create(parent?.obj)
+            objectInit?(self)
+        }
 
         // Setter functions
         func setText(_ text: String) { text.withCString { lv_dropdown_set_text(obj, $0) } }

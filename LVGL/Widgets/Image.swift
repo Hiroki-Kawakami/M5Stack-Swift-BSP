@@ -5,7 +5,10 @@ extension LVGL {
         typealias Align = lv_image_align_t
 
         init(obj: OpaquePointer) { self.obj = obj }
-        init<T: ObjectProtocol>(parent: T?) { self.obj = lv_image_create(parent?.obj) }
+        @discardableResult init<T: ObjectProtocol>(parent: T?, objectInit: ((Image) -> ())? = nil) {
+            self.obj = lv_image_create(parent?.obj)
+            objectInit?(self)
+        }
 
         // Setter functions
         func setSrc(_ src: UnsafeRawPointer) { lv_image_set_src(obj, src) }

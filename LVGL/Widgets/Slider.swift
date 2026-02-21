@@ -3,7 +3,10 @@ extension LVGL {
         let obj: OpaquePointer
 
         init(obj: OpaquePointer) { self.obj = obj }
-        init<T: ObjectProtocol>(parent: T?) { self.obj = lv_slider_create(parent?.obj) }
+        @discardableResult init<T: ObjectProtocol>(parent: T?, objectInit: ((Slider) -> ())? = nil) {
+            self.obj = lv_slider_create(parent?.obj)
+            objectInit?(self)
+        }
 
         // Setter functions
         func setValue(_ value: Int32, anim: lv_anim_enable_t) { lv_slider_set_value(obj, value, anim) }
